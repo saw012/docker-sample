@@ -1,0 +1,71 @@
+# docker-composeの概要はhttps://docs.docker.com/compose/へ。
+# versionは現時点であたらしい3.9を使用します
+version: "3.9"
+
+services:
+  vote:
+    # ./vote配下のDockerfileをビルドします
+    build: ./vote
+    # python app.pyを起動時に実行します
+    # Dockerfileで定義したCMDはcommandの内容で上書きされます
+    command: python app.py
+    # ./voteディレクトリをコンテナ上の/appにマウントします
+    volumes:
+     - ./vote:/app
+    # コンテナ上の80番ポートをローカルの5000番ポートに公開します
+    ports:
+      - "5000:80"
+    # front-tier、back-tierネットワークにつなぎます
+    networks:
+      - front-tier
+      - back-tier
+
+  result:
+    build: ./result
+    command: nodemon server.js
+    volumes:
+      - ./result:/app
+    ports:
+      - "5001:80"
+      - "5858:5858"
+    networks:
+      - front-tier
+      - back-tier
+
+  worker:
+    build: ./worker
+    networks:
+      - back-tier
+
+  redis:
+    # Dockerfileをビルドする必要がなく、用意したイメージを使用する場合はimageで指定します
+    image: redis:6.0.9-buster
+    # redisというコンテナ名をつけています
+    container_name: redis
+    ports: ["6379"]
+    networks:
+      - back-tier
+
+  db:
+    image: postgres:9.4
+    container_name: db
+    # コンテナ内で環境変数を設定します。
+    # ここではPOSTGRES_USER="postgres"、POSTGRES_PASSWORD="postgres"を設定します
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    volumes:
+      - "db-data:/var/lib/postgresql/data"
+    networks:
+      - back-tier
+
+# 名前つきの永続ボリュームを作成します。
+# docker-composeを落としてもデータはのこります。
+volumes:
+  db-data:
+
+# 仮想ネットワークを定義します。
+# 特にネットワークの種類に指定がなければ基本はブリッジネットワークで作成されます。
+networks:
+  front-tier:
+  back-tier:
