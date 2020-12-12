@@ -9,6 +9,9 @@ services:
     # python app.pyを起動時に実行します
     # Dockerfileで定義したCMDはcommandの内容で上書きされます
     command: python app.py
+    # ./voteディレクトリをコンテナ上の/appにマウントします
+    volumes:
+      - ./vote:/app
     # コンテナ上の80番ポートをローカルの5000番ポートに公開します
     ports:
       - "5000:80"
@@ -20,6 +23,8 @@ services:
   result:
     build: ./result
     command: nodemon server.js
+    volumes:
+      - ./result:/app
     ports:
       - "5001:80"
       - "5858:5858"
