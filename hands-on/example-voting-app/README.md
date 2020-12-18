@@ -11,7 +11,8 @@
 シンプルな投票アプリケーションをdockerで起動させます。  
 全体像は下図の通りです。  
 (workerは`.NET`ではなくて`Java`を使用しています)
-![](./architecture.png)
+
+<img src="./architecture.png" height=300>
 
 アプリケーションの説明を簡単に行いますと、voting-appは`dog`か`cat`が投票ができるアプリケーションです。voting-appで投票し、redis、worker、db、result-appで投票結果が反映される感じです。
 
