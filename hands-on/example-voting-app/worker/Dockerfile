@@ -18,6 +18,7 @@ COPY ["src/main", "/code/src/main"]
 # jarパッケージの生成をおこないます。
 RUN ["mvn", "package"]
 
+#--------------------------------------------------------------------------------
 # openjdkの8-jreが入ったdebian-busterのものをベースイメージとして使用します。
 # コンテナでは実際こちらがうごきます。
 FROM openjdk:8-jre-buster

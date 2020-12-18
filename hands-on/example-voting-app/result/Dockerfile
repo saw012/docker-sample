@@ -1,5 +1,5 @@
-# nodejsの15.4.0のdebian-busterのものをベースイメージとして使用します
-FROM node:15.4.0-buster
+# nodejsの10のdebian-busterのものをベースイメージとして使用します
+FROM node:10-buster
 
 # アプリケーションのディレクトリを指定します。
 WORKDIR /app
@@ -24,4 +24,4 @@ ENV PORT 80
 EXPOSE 80
 
 # コンテナ起動時に指定したコマンドを実行します
-CMD ["node", "server.js"]
+CMD ["nodemon", "server.js"]
